@@ -6,7 +6,7 @@ public class GameStats
 {
     private static float totalCash = 0, startingCash = 0;
     private static int numGamesPlayed = 0;
-    private static ArrayList<int[]> previousMatches = new ArrayList<>();
+    private static ArrayList<ArrayList<String>> previousMatches = new ArrayList<>();
 
     public static void setStartingCash(float amount)
     {
@@ -28,17 +28,12 @@ public class GameStats
         ++numGamesPlayed;
     }
 
-    public static int getNumGamesPlayed()
-    {
-        return numGamesPlayed;
-    }
-
-    public static void addMatchToList(int[] match)
+    public static void addMatchToList(ArrayList<String> match)
     {
         previousMatches.add(match);
     }
 
-    public static ArrayList<int[]> getPreviousMatches()
+    public static ArrayList<ArrayList<String>> getPreviousMatches()
     {
         return previousMatches;
     }

@@ -268,6 +268,7 @@ public class Keno {
                 if(curDraws >= numDraws)
                 {
                     button.setText("Play Again?");
+                    GameStats.incrementNumGamesPlayed();
                     finishedDraws = true;
                 }
 
@@ -302,5 +303,7 @@ public class Keno {
         for(var draw : drawList)
             if(spotBetButtons[Integer.valueOf(draw) - 1].getText() == "*")
                 matches.add(draw);
+
+        GameStats.addMatchToList((ArrayList<String>) matches.clone());
     }
 }

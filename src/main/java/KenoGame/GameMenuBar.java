@@ -71,10 +71,10 @@ public class GameMenuBar
         {
             var lookChangeButton = new MenuItem("New Look");
             lookChangeButton.setOnAction(t -> System.out.println("Make the New Look button do something! Dancing Spiderman Gif?"));
-            helpTab.getItems().add(lookChangeButton);
+            helpTab.getItems().addAll(lookChangeButton, statsButton);
         }
 
-        helpTab.getItems().addAll(statsButton, rulesButton, oddsButton, exitButton);
+        helpTab.getItems().addAll(rulesButton, oddsButton, exitButton);
 
         return menuBar;
     }
