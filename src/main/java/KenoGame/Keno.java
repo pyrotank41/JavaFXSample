@@ -23,7 +23,7 @@ public class Keno {
     private Button[] spotBetButtons;
     private int numDraws, curDraws;
     private VBox spotNumBox, spotBoardBox, drawNumBox, playBox;
-    private boolean activeGame, finishedDraws;
+    private boolean finishedDraws;
 
     public Keno(){
         numSpots = 0;
@@ -33,7 +33,7 @@ public class Keno {
         spotBetButtons = new Button[80];
         spotNumBox = spotBoardBox = drawNumBox = playBox = null;
         numDraws = 1;
-        activeGame = finishedDraws = false;
+        finishedDraws = false;
         matches = new ArrayList<>();
         curDraws = 0;
     }
@@ -61,12 +61,14 @@ public class Keno {
                 buttonsSelected.add(btn);
                 System.out.println(btn);
                 btn.setText("*");
+                btn.setStyle("-fx-background-color: yellow;");
                 ++numSelected;
             }
             else return;
         }
         else{
             btn.setText(btn.getId());
+            btn.setStyle(null);
             buttonsSelected.remove(btn);
             removeFromBetNumberArray(btn.getId());
             --numSelected;
@@ -143,13 +145,15 @@ public class Keno {
 
     private void generateRandomSpotNumbers(){
         betNums.clear();
+        resetSpotButtonsColor();
         Random random = new Random();
         System.out.print("Randomly generated numbers: ");
         while (betNums.size() < numSpots){
             int nextNum = random.nextInt(80) + 1;
-            if (!betNums.contains(nextNum)) {
-                betNums.add(""+nextNum);
+            if (!betNums.contains(String.valueOf(nextNum))) {
+                betNums.add(String.valueOf(nextNum));
                 spotBetButtons[nextNum-1].setText("*");
+                spotBetButtons[nextNum-1].setStyle("-fx-background-color: yellow;");
                 buttonsSelected.add(spotBetButtons[nextNum-1]);
             }
         }
@@ -189,6 +193,8 @@ public class Keno {
             else if(finishedDraws)
             {
                 btn.setText("Let's Play!");
+                finishedDraws = false;
+                curDraws = 0;
                 resetGame();
             }
             else
@@ -221,7 +227,7 @@ public class Keno {
         {
             int nextDraw = rand.nextInt(80) + 1;
 
-            if(!randDraws.contains(nextDraw))
+            if(!randDraws.contains(String.valueOf(nextDraw)))
                 randDraws.add(String.valueOf(nextDraw));
         }
 
@@ -260,6 +266,11 @@ public class Keno {
                     button.setText("Play Again?");
                     finishedDraws = true;
                 }
+
+                var synopsis = new String("You matched " + matches.size() + " numbers\n" +
+                                          "Matches: " + matches + "\n" +
+                                          "Winnings: " + "PUT WINNINGS IN HERE");
+                GameMenuBar.CreateInfoModal(synopsis);
             }
             String draw = drawList.get(i.getAndIncrement());
 
