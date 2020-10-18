@@ -28,8 +28,8 @@ public class Keno {
     public Keno(){
         numSpots = 0;
         numSelected = 0;
-        betNums = new ArrayList<String>();
-        buttonsSelected = new ArrayList<Button>();
+        betNums = new ArrayList<>();
+        buttonsSelected = new ArrayList<>();
         spotBetButtons = new Button[80];
         spotNumBox = spotBoardBox = drawNumBox = playBox = null;
         numDraws = 1;
@@ -39,6 +39,7 @@ public class Keno {
     }
 
 
+    // adding the bet numbers to the bet number arrayList when selected by the user
     private Boolean addToBetNumberArray(String num){
         if(betNums.size() == numSpots){
             System.out.println("max spots reached for your given choice");
@@ -47,6 +48,8 @@ public class Keno {
         betNums.add(num);
         return true;
     }
+
+    // removing the bet numbers to the bet number arrayList when deselected by the user
     private void removeFromBetNumberArray(String num)
     {
         betNums.remove(num);
@@ -56,6 +59,7 @@ public class Keno {
     // toggle action of the bet button.
     private void toggleBetNumButton(Button btn){
 
+        // when button is in its default state, change the state to selected.
         if(!btn.getText().equals("*")) {
             if (addToBetNumberArray(btn.getId())){
                 buttonsSelected.add(btn);
@@ -66,6 +70,7 @@ public class Keno {
             }
             else return;
         }
+        // when the button is selected, change the state to default.
         else{
             btn.setText(btn.getId());
             btn.setStyle(null);
@@ -73,6 +78,7 @@ public class Keno {
             removeFromBetNumberArray(btn.getId());
             --numSelected;
         }
+
 
         var enableLastStep = numSpots == numSelected;
         drawNumBox.setDisable(!enableLastStep);
@@ -91,12 +97,12 @@ public class Keno {
         btn.setOnAction(event);
     }
 
+    // The function to reset the bet number grid
+    // we change the test of the button to default
+    // furthermore we reset buttonsSelected and betNums arrayList.
     private void resetBetNumbersArrayList(){
 
-        for (int i = 0; i < buttonsSelected.size(); i++) {
-            Button  btn = buttonsSelected.get(i);
-            btn.setText(btn.getId());
-        }
+        for (Button btn : buttonsSelected) btn.setText(btn.getId());
         betNums.clear();
         buttonsSelected.clear();
         numSelected = 0;
@@ -172,6 +178,7 @@ public class Keno {
         btn.setOnAction(event);
     }
 
+    // event listner function for selecting number of draws to play
     public void numDrawToggleListner(ToggleGroup tg){
         tg.selectedToggleProperty().addListener((observableValue, old_toggle, new_toggle) -> {
             if (tg.getSelectedToggle() != null) {
@@ -181,6 +188,7 @@ public class Keno {
         });
     }
 
+    // The game starts here!!! this will start roling the dies and get the numbers drawn and to check if u won!
     public void playKenoListner(Button btn)
     {
         EventHandler<ActionEvent> event = e ->
@@ -188,7 +196,6 @@ public class Keno {
             if(betNums.size() != numSpots)
             {
                 System.out.println("Please select more "+ (numSpots-betNums.size())+ " numbers to start the play ");
-                return;
             }
             else if(finishedDraws)
             {
@@ -238,7 +245,7 @@ public class Keno {
     {
         for(var button : spotBetButtons)
         {
-            if(button.getText() == "*")
+            if(button.getText().equals("*"))
                 button.setStyle("-fx-background-color: yellow;");
             else
                 button.setStyle(null);
