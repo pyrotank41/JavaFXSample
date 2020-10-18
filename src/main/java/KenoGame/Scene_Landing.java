@@ -26,6 +26,12 @@ public class Scene_Landing implements SceneHolder
      */
     public void Activate()
     {
+        if(stage == null)
+        {
+            System.out.println("Need a valid stage!");
+            return;
+        }
+
         if(scene == null)
             scene = CreateScene();
 

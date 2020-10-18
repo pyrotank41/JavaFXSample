@@ -19,15 +19,20 @@ public class Scene_Game implements SceneHolder
     }
 
     @Override
-        public void Activate()
+    public void Activate()
+    {
+        if(stage == null)
         {
-            if(scene == null)
-                scene = CreateScene(new Keno());
-
-            stage.setTitle("Keno!");
-            stage.setScene(scene);
-            stage.show();
+            System.out.println("Need a valid stage!");
+            return;
         }
+        if(scene == null)
+            scene = CreateScene(new Keno());
+
+        stage.setTitle("Keno!");
+        stage.setScene(scene);
+        stage.show();
+    }
 
     public Scene CreateScene(Keno k){
         //declaring main vbox

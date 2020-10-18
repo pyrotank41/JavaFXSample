@@ -11,13 +11,18 @@ public class SceneManager
     /* Start Scene
      * Checks if the requestedScene is in the sceneMap
      * If so, calls Activate on it. If not, prints an error to the console.
+     * Returns whether or not the scene was found.
      */
-    public static void StartScene(String requestedScene)
+    public static boolean StartScene(String requestedScene)
     {
         if(sceneMap.containsKey(requestedScene))
+        {
             sceneMap.get(requestedScene).Activate();
-        else
-            System.out.println("Invalid Scene Change! " + requestedScene + " does not exist in the Scene Manager!");
+            return true;
+        }
+
+        System.out.println("Invalid Scene Change! " + requestedScene + " does not exist in the Scene Manager!");
+        return false;
     }
 
     /* Load Scenes
@@ -31,4 +36,10 @@ public class SceneManager
         sceneMap.put("landing", landingMenu);
         sceneMap.put("game", gameScene);
     }
+
+    /* Clear Scenes
+     * For unit testing different states without requiring an instantiated class
+     * Removes all scenes from the sceneMap
+     */
+    public static void ClearScenes() { sceneMap.clear(); }
 }
