@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -17,6 +18,7 @@ public class Keno {
     private ArrayList<Button> buttonsSelected;
     private Button[] spotBetButtons;
     private int numDraws;
+    private VBox spotNumBox, spotBoardBox, drawNumBox, playBox;
 
     public Keno(){
         numSpots = 0;
@@ -24,6 +26,7 @@ public class Keno {
         betNums = new ArrayList<String>();
         buttonsSelected = new ArrayList<Button>();
         spotBetButtons = new Button[80];
+        spotNumBox = spotBoardBox = drawNumBox = playBox = null;
         numDraws = 1;
     }
 
@@ -36,8 +39,10 @@ public class Keno {
         betNums.add(num);
         return true;
     }
-    private void removeFromBetNumberArray(String num){
+    private void removeFromBetNumberArray(String num)
+    {
         betNums.remove(num);
+        System.out.println("Removed " + num + " from set numbers.");
     }
 
     // toggle action of the bet button.
@@ -48,14 +53,20 @@ public class Keno {
                 buttonsSelected.add(btn);
                 System.out.println(btn);
                 btn.setText("*");
+                ++numSelected;
             }
             else return;
         }
         else{
             btn.setText(btn.getId());
             buttonsSelected.remove(btn);
+            removeFromBetNumberArray(btn.getId());
+            --numSelected;
         }
 
+        var enableLastStep = numSpots == numSelected;
+        drawNumBox.setDisable(!enableLastStep);
+        playBox.setDisable(!enableLastStep);
     }
 
     // function for adding event listner to the bet number button.
@@ -78,6 +89,7 @@ public class Keno {
         }
         betNums.clear();
         buttonsSelected.clear();
+        numSelected = 0;
     }
 
     public void addSpotNumberSliderListener(Slider slider)
@@ -91,10 +103,34 @@ public class Keno {
                     {
                         numSpots = newInt;
                         resetBetNumbersArrayList();
+
+                        var enableOtherInputs = numSpots > 0;
+                        spotBoardBox.setDisable(!enableOtherInputs);
+                        drawNumBox.setDisable(true);
+                        playBox.setDisable(true);
+
                         System.out.println(numSpots + " Spots is selected.");
                     }
                 }
         );
+    }
+
+    /* Set Panels
+     * Takes in the panels that can be disabled depending on game state.
+     * Implies initialization, disables spotBoardBox and drawNumBox until
+     * spotNumBox has a value other than 0 and the latter
+     * until the number selected is equal to the number of spots
+     */
+    public void setPanels(VBox spotNum, VBox drawBoard, VBox drawNum, VBox playKenoVB)
+    {
+        spotNumBox = spotNum;
+        spotBoardBox = drawBoard;
+        drawNumBox = drawNum;
+        playBox = playKenoVB;
+
+        spotBoardBox.setDisable(true);
+        drawNumBox.setDisable(true);
+        playBox.setDisable(true);
     }
 
     private void generateRandomSpotNumbers(){
@@ -116,10 +152,12 @@ public class Keno {
         EventHandler<ActionEvent> event = e -> {
             resetBetNumbersArrayList();
             generateRandomSpotNumbers();
+            numSelected = numSpots;
+            drawNumBox.setDisable(false);
+            playBox.setDisable(false);
         };
         //adding event handler
         btn.setOnAction(event);
-
     }
 
     public void numDrawToggleListner(ToggleGroup tg){

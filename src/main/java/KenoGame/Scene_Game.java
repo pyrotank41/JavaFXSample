@@ -34,7 +34,7 @@ public class Scene_Game implements SceneHolder
         stage.show();
     }
 
-    public Scene CreateScene(Keno k){
+    private Scene CreateScene(Keno k){
         //declaring main vbox
         VBox mainVB = new VBox();
 
@@ -46,12 +46,14 @@ public class Scene_Game implements SceneHolder
         VBox playKenoVB = playKenoVB(k);
 
         // adding various layouts to the main VB
-        mainVB.getChildren().addAll(menuBar ,spotCardsVB, betCardVB, drawingVB, playKenoVB);
+        mainVB.getChildren().addAll(menuBar, spotCardsVB, betCardVB, drawingVB, playKenoVB);
+
+        k.setPanels(spotCardsVB, betCardVB, drawingVB, playKenoVB);
 
         return new Scene(mainVB);
     }
 
-    public VBox createSpotNumberSlider(Keno keno)
+    private VBox createSpotNumberSlider(Keno keno)
     {
         VBox vbox = new VBox(10);
         vbox.setAlignment(Pos.CENTER);
@@ -71,7 +73,7 @@ public class Scene_Game implements SceneHolder
         return vbox;
     }
 
-    public VBox createBetCard(Keno k){
+    private VBox createBetCard(Keno k){
 
         // create a VBox
         VBox vbox = new VBox(10);
@@ -116,7 +118,7 @@ public class Scene_Game implements SceneHolder
         return vbox;
     }
 
-    public VBox createDrawingVB(Keno k){
+    private VBox createDrawingVB(Keno k){
         // create a VBox
         VBox vbox = new VBox(10);
         vbox.setPadding(new Insets(10, 0, 20, 20));
@@ -139,11 +141,10 @@ public class Scene_Game implements SceneHolder
         k.numDrawToggleListner(tg);
         vbox.getChildren().add(hbox);
 
-
         return vbox;
     }
 
-    public VBox playKenoVB(Keno k){
+    private VBox playKenoVB(Keno k){
         VBox vbox = new VBox();
         vbox.setPadding(new Insets(10, 10, 20, 0));
         vbox.setAlignment(Pos.CENTER);
