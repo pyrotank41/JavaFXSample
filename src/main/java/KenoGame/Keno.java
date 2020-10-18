@@ -1,24 +1,29 @@
 package KenoGame;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Keno {
 
     private int numSpots;
     private int numSelected;
-    private ArrayList<String> betNums;
+    private ArrayList<String> betNums, matches;
     private ArrayList<Button> buttonsSelected;
     private Button[] spotBetButtons;
-    private int numDraws;
+    private int numDraws, curDraws;
     private VBox spotNumBox, spotBoardBox, drawNumBox, playBox;
+    private boolean activeGame, finishedDraws;
 
     public Keno(){
         numSpots = 0;
@@ -28,6 +33,9 @@ public class Keno {
         spotBetButtons = new Button[80];
         spotNumBox = spotBoardBox = drawNumBox = playBox = null;
         numDraws = 1;
+        activeGame = finishedDraws = false;
+        matches = new ArrayList<>();
+        curDraws = 0;
     }
 
 
@@ -169,19 +177,110 @@ public class Keno {
         });
     }
 
-    public void playKenoListner(Button btn){
-        EventHandler<ActionEvent> event = e -> {
-            if(betNums.size() != numSpots){
+    public void playKenoListner(Button btn)
+    {
+        EventHandler<ActionEvent> event = e ->
+        {
+            if(betNums.size() != numSpots)
+            {
                 System.out.println("Please select more "+ (numSpots-betNums.size())+ " numbers to start the play ");
                 return;
             }
-
+            else if(finishedDraws)
+                resetGame();
+            else
+                startRound(btn);
 
         };
         //adding event handler
         btn.setOnAction(event);
     }
 
+    private void resetGame()
+    {
+        resetSpotButtonsColor();
+        resetBetNumbersArrayList();
+        numSpots = 0;
+        spotNumBox.setDisable(false);
+        spotBoardBox.setDisable(true);
+        drawNumBox.setDisable(true);
+        playBox.setDisable(true);
+    }
 
+    private ArrayList<String> generateDraw()
+    {
+        var rand = new Random();
+        var randDraws = new ArrayList<String>();
 
+        while(randDraws.size() < 20)
+        {
+            int nextDraw = rand.nextInt(80) + 1;
+
+            if(!randDraws.contains(nextDraw))
+                randDraws.add(String.valueOf(nextDraw));
+        }
+
+        return randDraws;
+    }
+
+    private void resetSpotButtonsColor()
+    {
+        for(var button : spotBetButtons)
+            button.setStyle(null);
+    }
+
+    private void startRound(Button button)
+    {
+        resetSpotButtonsColor();
+        button.setDisable(true);
+        button.setText("Continue");
+
+        drawNumBox.setDisable(true);
+        spotBoardBox.setDisable(true);
+        spotNumBox.setDisable(true);
+
+        var drawList = generateDraw();
+        getMatches(drawList);
+
+        AtomicInteger i = new AtomicInteger();
+        EventHandler<ActionEvent> colorSpotBox = t ->
+        {
+            if(i.get() >= 19)
+            {
+                button.setDisable(false);
+                ++curDraws;
+
+                if(curDraws >= numDraws)
+                {
+                    button.setText("Play Again?");
+                    finishedDraws = true;
+                }
+            }
+            String draw = drawList.get(i.getAndIncrement());
+
+            var color = "green"; // success
+            if(!matches.contains(draw))
+                color = "red"; // missed
+
+            spotBetButtons[Integer.valueOf(draw) - 1]
+                    .setStyle("-fx-background-color: " + color + ";");
+        };
+
+        var timeline = new Timeline(
+                new KeyFrame(Duration.seconds(0.1), colorSpotBox),
+                new KeyFrame(Duration.seconds(0.1))
+        );
+
+        timeline.setCycleCount(20);
+        timeline.play();
+    }
+
+    private void getMatches(ArrayList<String> drawList)
+    {
+        matches.clear();
+
+        for(var draw : drawList)
+            if(spotBetButtons[Integer.valueOf(draw) - 1].getText() == "*")
+                matches.add(draw);
+    }
 }
