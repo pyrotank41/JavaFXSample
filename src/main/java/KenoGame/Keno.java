@@ -207,8 +207,8 @@ public class Keno {
 
     private void resetGame()
     {
-        resetSpotButtonsColor();
         resetBetNumbersArrayList();
+        resetSpotButtonsColor();
         numSpots = 0;
         var slider = (Slider)spotNumBox.getChildren().get(1);
         slider.setValue(0);
@@ -237,9 +237,13 @@ public class Keno {
     private void resetSpotButtonsColor()
     {
         for(var button : spotBetButtons)
-            button.setStyle(null);
+        {
+            if(button.getText() == "*")
+                button.setStyle("-fx-background-color: yellow;");
+            else
+                button.setStyle(null);
+        }
     }
-
     private void startRound(Button button)
     {
         resetSpotButtonsColor();
