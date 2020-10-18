@@ -187,7 +187,10 @@ public class Keno {
                 return;
             }
             else if(finishedDraws)
+            {
+                btn.setText("Let's Play!");
                 resetGame();
+            }
             else
                 startRound(btn);
 
@@ -201,6 +204,8 @@ public class Keno {
         resetSpotButtonsColor();
         resetBetNumbersArrayList();
         numSpots = 0;
+        var slider = (Slider)spotNumBox.getChildren().get(1);
+        slider.setValue(0);
         spotNumBox.setDisable(false);
         spotBoardBox.setDisable(true);
         drawNumBox.setDisable(true);
