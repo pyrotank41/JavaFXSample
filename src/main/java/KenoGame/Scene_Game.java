@@ -40,7 +40,7 @@ public class Scene_Game implements SceneHolder
 
         // creating various layouts to the main VB
         var menuBar = GameMenuBar.CreateMenu(null);
-        VBox spotCardsVB = createSpotNumbersCard(k);
+        VBox spotCardsVB = createSpotNumberSlider(k);
         VBox betCardVB = createBetCard(k);
         VBox drawingVB = createDrawingVB(k);
         VBox playKenoVB = playKenoVB(k);
@@ -51,41 +51,23 @@ public class Scene_Game implements SceneHolder
         return new Scene(mainVB);
     }
 
-    public VBox createSpotNumbersCard(Keno k){
-        // create a VBox
+    public VBox createSpotNumberSlider(Keno keno)
+    {
         VBox vbox = new VBox(10);
         vbox.setAlignment(Pos.CENTER);
-        vbox.setPadding(new Insets(10, 0, 20, 20));
-        Label l1 = new Label("Step 1. How many Spots do you want to play?");
-        vbox.getChildren().add(l1);
+        vbox.setPadding(new Insets(10, 20, 20, 20));
+        Label directions = new Label("How many Spots do you wish to play?");
 
+        var slider = new Slider(0, 10, 0);
+        slider.setSnapToTicks(true);
+        slider.setShowTickLabels(true);
+        slider.setMajorTickUnit(1);
+        slider.setMinorTickCount(0);
+        slider.setUserData("NumSpots");
 
-        // creating a ned hbox for toggles to reside in
-        HBox hbox = new HBox(10);
-        hbox.setAlignment(Pos.CENTER);
+        keno.addSpotNumberSliderListener(slider);
 
-        // create a toggle group
-        ToggleGroup tg = new ToggleGroup();
-        tg.setUserData("NumSpots");
-
-        // add buttons to VBox
-        int i = 0;
-        int[] spots = {1,4,8, 10};
-
-        while(i < spots.length) {
-            RadioButton r = new RadioButton(""+spots[i]);
-            r.setUserData(spots[i]);
-            r.setToggleGroup(tg);
-            if(spots[i] == 1) r.setSelected(true);
-            hbox.getChildren().add(r);
-            i++;
-        }
-
-        //adding the listner the the toggle group
-        k.addSpotNumbersToggleGroupListner(tg);
-
-        vbox.getChildren().add(hbox);
-
+        vbox.getChildren().addAll(directions, slider);
         return vbox;
     }
 

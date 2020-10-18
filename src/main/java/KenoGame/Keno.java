@@ -3,6 +3,7 @@ package KenoGame;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleGroup;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class Keno {
     private int numDraws;
 
     public Keno(){
-        numSpots = 1;
+        numSpots = 0;
         numSelected = 0;
         betNums = new ArrayList<String>();
         buttonsSelected = new ArrayList<Button>();
@@ -78,16 +79,22 @@ public class Keno {
         betNums.clear();
         buttonsSelected.clear();
     }
-    public void addSpotNumbersToggleGroupListner(ToggleGroup tg){
 
-        tg.selectedToggleProperty().addListener((observableValue, old_toggle, new_toggle) -> {
-            if (tg.getSelectedToggle() != null) {
-                numSpots = Integer.parseInt(""+tg.getSelectedToggle().getUserData());
-                resetBetNumbersArrayList();
-                System.out.println("" + tg.getUserData()+ ":" +tg.getSelectedToggle().getUserData());
-            }
-        });
+    public void addSpotNumberSliderListener(Slider slider)
+    {
+        slider.valueProperty().addListener(
+                (observable, oldVal, newVal) ->
+                {
+                    var newInt = newVal.intValue();
 
+                    if(newInt != numSpots)
+                    {
+                        numSpots = newInt;
+                        resetBetNumbersArrayList();
+                        System.out.println(numSpots + " Spots is selected.");
+                    }
+                }
+        );
     }
 
     private void generateRandomSpotNumbers(){

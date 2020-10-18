@@ -70,6 +70,8 @@ public class Scene_Landing implements SceneHolder
 
         var menuBar = GameMenuBar.CreateMenu(description);
 
+        // Could add Starting Cash amount?
+
         content.getChildren().addAll(title, playButton, description);
         vbox.getChildren().addAll(menuBar, content);
 

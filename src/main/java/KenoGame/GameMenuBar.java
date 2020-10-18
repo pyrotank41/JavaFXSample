@@ -59,8 +59,8 @@ public class GameMenuBar
 
         if(description == null) // implies in game scene, requires look change button
         {
-            var lookChangeButton = new MenuItem("Change the look!");
-            lookChangeButton.setOnAction(t -> System.out.println("Make the look change button do something!"));
+            var lookChangeButton = new MenuItem("New Look");
+            lookChangeButton.setOnAction(t -> System.out.println("Make the New Look button do something! Dancing Spiderman Gif?"));
             helpTab.getItems().add(lookChangeButton);
         }
 
