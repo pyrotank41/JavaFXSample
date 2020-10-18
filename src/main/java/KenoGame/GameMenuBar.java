@@ -37,6 +37,7 @@ public class GameMenuBar
         var helpTab = new Menu("Help");
         var rulesButton = new MenuItem("Rules");
         var oddsButton = new MenuItem("Odds");
+        var statsButton = new MenuItem("Stats");
         var exitButton = new MenuItem("Exit");
 
         rulesButton.setOnAction(t ->
@@ -53,6 +54,15 @@ public class GameMenuBar
                                    else
                                        CreateInfoModal(ODDS);
                                });
+        statsButton.setOnAction(t ->
+                               {
+                                   var stats = GameStats.generateStatsString();
+
+                                   if(description != null)
+                                       description.setText(stats);
+                                   else
+                                       CreateInfoModal(stats);
+                               });
         exitButton.setOnAction(t -> System.exit(0));
 
         menuBar.getMenus().add(helpTab);
@@ -64,7 +74,7 @@ public class GameMenuBar
             helpTab.getItems().add(lookChangeButton);
         }
 
-        helpTab.getItems().addAll(rulesButton, oddsButton, exitButton);
+        helpTab.getItems().addAll(statsButton, rulesButton, oddsButton, exitButton);
 
         return menuBar;
     }
