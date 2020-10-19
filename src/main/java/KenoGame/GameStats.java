@@ -18,6 +18,7 @@ public class GameStats
         return totalCash;
     }
 
+    public static int getNumGamesPlayed() { return numGamesPlayed; }
     public static void incrementNumGamesPlayed()
     {
         ++numGamesPlayed;
@@ -31,6 +32,16 @@ public class GameStats
     public static ArrayList<ArrayList<String>> getPreviousMatches()
     {
         return previousMatches;
+    }
+
+    /* Reset Characteristics
+     * Resets everything cached on GameStats
+     */
+    public static void resetCharacteristics()
+    {
+        totalCash = 1000;
+        numGamesPlayed = 0;
+        previousMatches.clear();
     }
 
     /* Calculate Winnings
