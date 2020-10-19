@@ -10,6 +10,9 @@ import javafx.stage.Stage;
 
 public class GameMenuBar
 {
+    private static VBox[] nightAbleBoxes;
+    private static boolean nightMode = false;
+
     private static String ODDS = "Overall Odds \n" +
                                  "1  spot : 1 in 4.00 \n" +
                                  "4  spot : 1 in 3.86 \n" +
@@ -70,7 +73,7 @@ public class GameMenuBar
         if(description == null) // implies in game scene, requires look change button
         {
             var lookChangeButton = new MenuItem("New Look");
-            lookChangeButton.setOnAction(t -> System.out.println("Make the New Look button do something! Dancing Spiderman Gif?"));
+            lookChangeButton.setOnAction(t -> NewLook());
             helpTab.getItems().addAll(lookChangeButton, statsButton);
         }
 
@@ -92,5 +95,33 @@ public class GameMenuBar
         modalStage.setTitle("Help");
         modalStage.setScene(modalScene);
         modalStage.show();
+    }
+
+    public static void CacheGameScreenElements(VBox... skinnableBoxes)
+    {
+        nightAbleBoxes = skinnableBoxes;
+    }
+
+    private static void NewLook()
+    {
+        if(nightAbleBoxes != null)
+        {
+            if(!nightMode)
+                for(var box : nightAbleBoxes)
+                {
+                    box.setStyle("-fx-background-color: black;");
+                    for(var child : box.getChildren())
+                        child.setStyle("-fx-text-fill: grey;");
+                }
+            else
+                for(var box : nightAbleBoxes)
+                {
+                    box.setStyle("-fx-background-color: #f4f4f4;");
+                    for(var child : box.getChildren())
+                        child.setStyle("-fx-text-fill: black;");
+                }
+        }
+
+        nightMode = !nightMode;
     }
 }

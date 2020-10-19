@@ -147,6 +147,8 @@ public class Keno {
         spotBoardBox.setDisable(true);
         drawNumBox.setDisable(true);
         playBox.setDisable(true);
+
+        GameMenuBar.CacheGameScreenElements(spotNumBox, spotBoardBox, drawNumBox, playBox);
     }
 
     private void generateRandomSpotNumbers(){
