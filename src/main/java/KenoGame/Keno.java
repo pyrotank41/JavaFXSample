@@ -204,6 +204,8 @@ public class Keno {
                 curDraws = 0;
                 resetGame();
             }
+            else if(GameStats.getTotalCash() <= 0)
+                SceneManager.StartScene("landing");
             else
                 startRound(btn);
 
@@ -279,9 +281,13 @@ public class Keno {
                     finishedDraws = true;
                 }
 
+                var cost = 1 * numDraws;
+                var winnings = GameStats.calculateWinnings(numSpots, matches.size(), 1);
                 var synopsis = new String("You matched " + matches.size() + " numbers\n" +
                                           "Matches: " + matches + "\n" +
-                                          "Winnings: " + "PUT WINNINGS IN HERE");
+                                          "Winnings: $" + (winnings - cost / numDraws));
+
+                GameStats.addCash(winnings - cost / numDraws);
                 GameMenuBar.CreateInfoModal(synopsis);
             }
             String draw = drawList.get(i.getAndIncrement());
@@ -295,7 +301,7 @@ public class Keno {
         };
 
         var timeline = new Timeline(
-                new KeyFrame(Duration.seconds(0.1), colorSpotBox),
+                new KeyFrame(Duration.seconds(0.4), colorSpotBox),
                 new KeyFrame(Duration.seconds(0.1))
         );
 

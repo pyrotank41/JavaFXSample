@@ -4,14 +4,9 @@ import java.util.ArrayList;
 
 public class GameStats
 {
-    private static float totalCash = 0, startingCash = 0;
+    private static float totalCash = 1000;
     private static int numGamesPlayed = 0;
     private static ArrayList<ArrayList<String>> previousMatches = new ArrayList<>();
-
-    public static void setStartingCash(float amount)
-    {
-        startingCash = totalCash = amount;
-    }
 
     public static void addCash(float amount)
     {
@@ -160,9 +155,9 @@ public class GameStats
         }
 
         return new String("Stats" +
-                          "\nStarting cash: $" + startingCash +
+                          "\nStarting cash: $1000" +
                           "\nCurrent  cash: $" + totalCash +
-                          "\nWinnings     : $" + (totalCash - startingCash) +
+                          "\nWinnings     : $" + (totalCash - 1000) +
                           "\nGames played : "  + numGamesPlayed +
                           "\nMatches\n" + prevMatchesString.toString());
     }
