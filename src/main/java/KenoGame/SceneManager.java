@@ -1,7 +1,10 @@
+/* Scene Manager
+ * A static utility for starting Scenes
+ */
+
 package KenoGame;
 
 import javafx.stage.Stage;
-
 import java.util.HashMap;
 
 public class SceneManager

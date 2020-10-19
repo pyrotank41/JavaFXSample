@@ -1,3 +1,7 @@
+/* Game Menu Bar
+ * Creates a menu that can be used in both scenes
+ * Changes functionality if it's in the Game scene
+ */
 package KenoGame;
 
 import javafx.scene.Scene;
@@ -10,6 +14,7 @@ import javafx.stage.Stage;
 
 public class GameMenuBar
 {
+    // Caching objects for "New Look"
     private static VBox[] nightAbleBoxes;
     private static boolean nightMode = false;
 
@@ -97,14 +102,21 @@ public class GameMenuBar
         modalStage.show();
     }
 
+    /* Cache Game Screen Elements
+     * Takes in an array of VBox's and imports them to nightAbleBoxes
+     */
     public static void CacheGameScreenElements(VBox... skinnableBoxes)
     {
         nightAbleBoxes = skinnableBoxes;
     }
 
+    /* New Look
+     * Toggles a psuedo-nightmode.
+     * Modifies the colors of the VBox's and their children's text.
+     */
     private static void NewLook()
     {
-        if(nightAbleBoxes != null)
+        if(nightAbleBoxes != null) // if this appears in the wrong scene, drop it.
         {
             if(!nightMode)
                 for(var box : nightAbleBoxes)

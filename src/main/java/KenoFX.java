@@ -1,3 +1,7 @@
+/* KenoFX
+ * Responsible for initializing the SceneManager and launching the landing screen
+ */
+
 import KenoGame.SceneManager;
 import javafx.application.Application;
 import javafx.stage.Stage;

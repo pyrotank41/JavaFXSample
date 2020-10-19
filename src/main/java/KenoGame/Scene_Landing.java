@@ -1,3 +1,7 @@
+/* Scene - Landing
+ * Landing scene for when the application starts or the player loses.
+ */
+
 package KenoGame;
 
 import javafx.geometry.Pos;
@@ -73,6 +77,6 @@ public class Scene_Landing implements SceneHolder
         content.getChildren().addAll(title, playButton, description);
         vbox.getChildren().addAll(menuBar, content);
 
-        return new Scene(vbox, 350, 650);
+        return new Scene(vbox, 355, 690);
     }
 }

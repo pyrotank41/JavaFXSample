@@ -1,3 +1,6 @@
+/* Keno Game
+ * The logic that powers the UI and game states
+ */
 package KenoGame;
 
 import javafx.animation.KeyFrame;
@@ -15,7 +18,6 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Keno {
-
     private int numSpots;
     private int numSelected;
     private ArrayList<String> betNums, matches;
@@ -108,6 +110,11 @@ public class Keno {
         numSelected = 0;
     }
 
+    /* Add Spot Number Slider Listener
+     * To be called by Scene_Game
+     * Integrates the slider functionality with the board
+     * Sets the slider to call the event listed
+     */
     public void addSpotNumberSliderListener(Slider slider)
     {
         slider.valueProperty().addListener(
@@ -118,8 +125,10 @@ public class Keno {
                     if(newInt != numSpots)
                     {
                         numSpots = newInt;
+
                         resetBetNumbersArrayList();
 
+                        // Changes the board state based on available spots
                         var enableOtherInputs = numSpots > 0;
                         spotBoardBox.setDisable(!enableOtherInputs);
                         drawNumBox.setDisable(true);
@@ -151,6 +160,7 @@ public class Keno {
         GameMenuBar.CacheGameScreenElements(spotNumBox, spotBoardBox, drawNumBox, playBox);
     }
 
+    // Generates values for quick pick
     private void generateRandomSpotNumbers(){
         betNums.clear();
         resetSpotButtonsColor();
@@ -168,6 +178,7 @@ public class Keno {
         System.out.println(betNums);
     }
 
+    // Generates and integrates an event for quick pick
     public void generateRandomSpotNumbersButtonListner(Button btn){
         EventHandler<ActionEvent> event = e -> {
             resetBetNumbersArrayList();
@@ -210,25 +221,33 @@ public class Keno {
                 SceneManager.StartScene("landing");
             else
                 startRound(btn);
-
         };
         //adding event handler
         btn.setOnAction(event);
     }
 
+    /* Reset Game
+     * Resets the board characteristics for a fresh game
+     */
     private void resetGame()
     {
         resetBetNumbersArrayList();
         resetSpotButtonsColor();
-        numSpots = 0;
+
         var slider = (Slider)spotNumBox.getChildren().get(1);
         slider.setValue(0);
+        numSpots = 0;
+
         spotNumBox.setDisable(false);
         spotBoardBox.setDisable(true);
         drawNumBox.setDisable(true);
         playBox.setDisable(true);
     }
 
+    /* Generate Draw
+     * Creates a random list of non duplicating numbers as strings
+     * Returns said list.
+     */
     private ArrayList<String> generateDraw()
     {
         var rand = new Random();
@@ -237,14 +256,20 @@ public class Keno {
         while(randDraws.size() < 20)
         {
             int nextDraw = rand.nextInt(80) + 1;
+            var nextDrawStr = String.valueOf(nextDraw);
 
-            if(!randDraws.contains(String.valueOf(nextDraw)))
-                randDraws.add(String.valueOf(nextDraw));
+            if(!randDraws.contains(nextDrawStr))
+                randDraws.add(nextDrawStr);
         }
 
         return randDraws;
     }
 
+    /* Reset Spot Buttons' Color
+     * Checks if each button is currently part of the bet
+     * if so, changes it (or keeps it) yellow
+     * if not, resets the button to the default characteristics.
+     */
     private void resetSpotButtonsColor()
     {
         for(var button : spotBetButtons)
@@ -255,22 +280,36 @@ public class Keno {
                 button.setStyle(null);
         }
     }
+
+    /* Start Round
+     * Handles the gameplay and board characteristics during gameplay
+     * Locks inputs that are not allowed to be modified
+     * Runs simple animations to color each board piece
+     * Modifies game state and the board
+     */
     private void startRound(Button button)
     {
+        // Clean up in case running second time
         resetSpotButtonsColor();
         button.setDisable(true);
         button.setText("Continue");
 
+        // Disable inputs that are not meant to be used during the round
         drawNumBox.setDisable(true);
         spotBoardBox.setDisable(true);
         spotNumBox.setDisable(true);
 
+        // Generate the list of Spots that are going to be drawn
         var drawList = generateDraw();
         getMatches(drawList);
 
-        AtomicInteger i = new AtomicInteger();
+        // Color Spot Boxes
+        // Goes through each Spot that needs to be activated to display draws
+        // At the end, determines game state and pops up a modal window for round information
+        AtomicInteger i = new AtomicInteger(); // Hold the index for which button is to be modified
         EventHandler<ActionEvent> colorSpotBox = t ->
         {
+            // If end of round
             if(i.get() >= 19)
             {
                 button.setDisable(false);
@@ -283,16 +322,20 @@ public class Keno {
                     finishedDraws = true;
                 }
 
-                var cost = 1 * numDraws;
-                var winnings = GameStats.calculateWinnings(numSpots, matches.size(), 1);
+                // Sets up Game Stats and info, can replace wager with a cached value if added to menu
+                var wager = 1f;
+                var cost = wager * (float)numDraws;
+                var winnings = GameStats.calculateWinnings(numSpots, matches.size(), wager);
                 var synopsis = new String("You matched " + matches.size() + " numbers\n" +
                                           "Matches: " + matches + "\n" +
-                                          "Winnings: $" + (winnings - cost / numDraws));
+                                          "Winnings: $" + (winnings - (cost / (float)numDraws)));
 
-                GameStats.addCash(winnings - cost / numDraws);
+                GameStats.addCash(winnings - (cost / (float)numDraws));
                 GameMenuBar.CreateInfoModal(synopsis);
             }
-            String draw = drawList.get(i.getAndIncrement());
+
+            // Finds the active draw, and colors the spot accordingly
+            var draw = drawList.get(i.getAndIncrement());
 
             var color = "green"; // success
             if(!matches.contains(draw))
@@ -302,6 +345,7 @@ public class Keno {
                     .setStyle("-fx-background-color: " + color + ";");
         };
 
+        // Timeline for spacing out the draws, adds tension to the atmosphere
         var timeline = new Timeline(
                 new KeyFrame(Duration.seconds(0.4), colorSpotBox),
                 new KeyFrame(Duration.seconds(0.1))
@@ -311,12 +355,17 @@ public class Keno {
         timeline.play();
     }
 
+    /* Get Matches
+     * Intended for the drawList
+     * Sets up the matches list with buttons that are activated as well as drawn
+     * Sends a copy of the list to GameStats for archiving in the stats window
+     */
     private void getMatches(ArrayList<String> drawList)
     {
         matches.clear();
 
         for(var draw : drawList)
-            if(spotBetButtons[Integer.valueOf(draw) - 1].getText() == "*")
+            if(spotBetButtons[Integer.valueOf(draw) - 1].getText().equals("*"))
                 matches.add(draw);
 
         GameStats.addMatchToList((ArrayList<String>) matches.clone());

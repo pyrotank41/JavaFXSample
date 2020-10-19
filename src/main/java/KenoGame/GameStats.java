@@ -42,11 +42,15 @@ public class GameStats
         float earnings = 0.0f;
 
         if(numSpots == 1)
+        {
             if(numMatches == 1)
                 earnings = 2;
+        }
         else if(numSpots == 2)
+        {
             if(numMatches == 2)
                 earnings = 11;
+        }
         else if(numSpots == 3)
         {
             if(numMatches == 2)
@@ -56,93 +60,93 @@ public class GameStats
         }
         else if(numSpots == 4)
         {
-            if(numSpots == 2)
+            if(numMatches == 2)
                 earnings = 1;
-            else if(numSpots == 3)
+            else if(numMatches == 3)
                 earnings = 5;
-            else if(numSpots == 4)
+            else if(numMatches == 4)
                 earnings = 75;
         }
         else if(numSpots == 5)
         {
-            if(numSpots == 3)
+            if(numMatches == 3)
                 earnings = 2;
-            else if(numSpots == 4)
+            else if(numMatches == 4)
                 earnings = 18;
-            else if(numSpots == 5)
+            else if(numMatches == 5)
                 earnings = 420;
         }
         else if(numSpots == 6)
         {
-            if(numSpots == 3)
+            if(numMatches == 3)
                 earnings = 1;
-            else if(numSpots == 4)
+            else if(numMatches == 4)
                 earnings = 8;
-            else if(numSpots == 5)
+            else if(numMatches == 5)
                 earnings = 50;
-            else if(numSpots == 6)
+            else if(numMatches == 6)
                 earnings = 1100;
         }
         else if(numSpots == 7)
         {
-            if(numSpots == 3)
+            if(numMatches == 3)
                 earnings = 1;
-            else if(numSpots == 4)
+            else if(numMatches == 4)
                 earnings = 3;
-            else if(numSpots == 5)
+            else if(numMatches == 5)
                 earnings = 17;
-            else if(numSpots == 6)
+            else if(numMatches == 6)
                 earnings = 100;
-            else if(numSpots == 7)
+            else if(numMatches == 7)
                 earnings = 4500;
         }
         else if(numSpots == 8)
         {
-            if(numSpots == 4)
+            if(numMatches == 4)
                 earnings = 2;
-            else if(numSpots == 5)
+            else if(numMatches == 5)
                 earnings = 12;
-            else if(numSpots == 6)
+            else if(numMatches == 6)
                 earnings = 50;
-            else if(numSpots == 7)
+            else if(numMatches == 7)
                 earnings = 750;
-            else if(numSpots == 8)
+            else if(numMatches == 8)
                 earnings = 10000;
         }
         else if(numSpots == 9)
         {
-            if(numSpots == 4)
+            if(numMatches == 4)
                 earnings = 1;
-            else if(numSpots == 5)
+            else if(numMatches == 5)
                 earnings = 6;
-            else if(numSpots == 6)
+            else if(numMatches == 6)
                 earnings = 25;
-            else if(numSpots == 7)
+            else if(numMatches == 7)
                 earnings = 150;
-            else if(numSpots == 8)
+            else if(numMatches == 8)
                 earnings = 3000;
-            else if(numSpots == 9)
+            else if(numMatches == 9)
                 earnings = 30000;
         }
         else if(numSpots == 10)
         {
-            if(numSpots == 0)
+            if(numMatches == 0)
                 earnings = 5;
-            else if(numSpots == 5)
+            else if(numMatches == 5)
                 earnings = 2;
-            else if(numSpots == 6)
+            else if(numMatches == 6)
                 earnings = 15;
-            else if(numSpots == 7)
+            else if(numMatches == 7)
                 earnings = 40;
-            else if(numSpots == 8)
+            else if(numMatches == 8)
                 earnings = 450;
-            else if(numSpots == 9)
+            else if(numMatches == 9)
                 earnings = 4250;
-            else if(numSpots == 10)
+            else if(numMatches == 10)
                 earnings = 100000;
         }
 
-        return  earnings * wager;
+        return earnings * wager;
     }
 
     public static String generateStatsString()
@@ -158,7 +162,7 @@ public class GameStats
                           "\nStarting cash: $1000" +
                           "\nCurrent  cash: $" + totalCash +
                           "\nWinnings     : $" + (totalCash - 1000) +
-                          "\nGames played : "  + numGamesPlayed +
+                          "\nGames played : " + numGamesPlayed +
                           "\nMatches\n" + prevMatchesString.toString());
     }
 }
